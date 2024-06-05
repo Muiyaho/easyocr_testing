@@ -14,10 +14,13 @@
                 <input type="file" name="file" accept="image/*" class="file-input">
                 <div class="buttons">
                     <button type="submit" class="button">업로드</button>
-                    <button type="reset" class="button" onclick="window.location.href='/'">초기화</button>
+                    <button type="button" class="button" onclick="resetForm()">초기화</button>
                 </div>
             </form>
-            <p>클립보드에서 이미지를 붙여넣으세요 (Ctrl+V)</p>
+            <div id="drop-zone" class="drop-zone">
+                <p>클립보드에서 이미지를 붙여넣으세요 (Ctrl+V)</p>
+                <p>또는 이미지를 여기에 드래그 앤 드랍하세요</p>
+            </div>
             <!-- 업로드된 이미지 표시 -->
             {% if file_path %}
                 <div class="image-container">
@@ -62,6 +65,57 @@
                       })
                       .catch(error => console.error('Error:', error));
                 }
+            }
+        });
+
+        function resetForm() {
+            let filePath = "{{ file_path }}";
+            if (filePath) {
+                let formData = new FormData();
+                formData.append('file_path', filePath);
+                fetch('{{ url_for('reset') }}', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    window.location.href = '{{ url_for('index') }}';
+                }).catch(error => console.error('Error:', error));
+            } else {
+                window.location.href = '{{ url_for('index') }}';
+            }
+        }
+
+        // 드래그 앤 드랍 기능 추가
+        const dropZone = document.getElementById('drop-zone');
+
+        dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('drag-over');
+
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                const formData = new FormData();
+                formData.append('file', files[0]);
+
+                fetch('{{ url_for('index') }}', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.text())
+                  .then(data => {
+                      document.open();
+                      document.write(data);
+                      document.close();
+                  })
+                  .catch(error => console.error('Error:', error));
             }
         });
     </script>

@@ -78,7 +78,7 @@ form.upload-form {
 }
 
 .uploaded-image {
-    max-width: 80%; /* 기존 크기의 80%로 설정 */
+    max-width: 60%; /* 기존 크기의 60%로 설정 */
     height: auto;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -111,4 +111,19 @@ p {
     font-size: 14px;
     color: #777;
     margin-top: 10px;
+}
+
+/* 드래그 앤 드랍 영역 스타일 */
+.drop-zone {
+    border: 2px dashed #007BFF;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    color: #777;
+    margin-top: 20px;
+}
+
+.drop-zone.drag-over {
+    border-color: #0056b3;
+    background-color: #f0f8ff;
 }

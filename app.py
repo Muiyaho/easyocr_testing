@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_from_directory
+from flask import Flask, request, render_template, send_from_directory, redirect, url_for
 import easyocr
 import os
 
@@ -43,6 +43,15 @@ def index():
 
     # 결과와 함께 초기 화면 렌더링
     return render_template('index.html', itemOptionList=itemOptionList, file_path=file_path)
+
+
+@app.route('/reset', methods=['POST'])
+def reset():
+    # 업로드된 파일을 삭제하는 엔드포인트
+    file_path = request.form.get('file_path')
+    if file_path and os.path.exists(file_path):
+        os.remove(file_path)
+    return redirect(url_for('index'))
 
 
 @app.route('/uploads/<filename>')
