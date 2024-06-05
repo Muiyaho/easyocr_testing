@@ -1,0 +1,6 @@
+Flask
+easyocr
+Pillow
+Werkzeug
+torch
+torchvision

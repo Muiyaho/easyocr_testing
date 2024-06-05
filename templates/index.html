@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EasyOCR Flask App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Upload an Image for OCR</h1>
+    <form method="POST" action="{{ url_for('index') }}" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*">
+        <button type="submit">Upload</button>
+    </form>
+
+    {% if itemOptionList %}
+        <h2>OCR Results</h2>
+        <img src="{{ file_path }}" alt="Uploaded Image">
+        <ul>
+            {% for item in itemOptionList %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
