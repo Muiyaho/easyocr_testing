@@ -22,10 +22,9 @@ document.addEventListener('paste', function(event) {
 });
 
 function resetForm() {
-    let filePath = file_path;
-    if (filePath) {
+    if (file_path) {
         let formData = new FormData();
-        formData.append('file_path', filePath);
+        formData.append('file_path', file_path);
         fetch(resetUrl, {
             method: 'POST',
             body: formData
@@ -71,9 +70,3 @@ dropZone.addEventListener('drop', (event) => {
           .catch(error => console.error('Error:', error));
     }
 });
-
-// Flask에서 제공하는 URL을 JavaScript 변수로 설정
-const uploadUrl = "{{ url_for('index') }}";
-const resetUrl = "{{ url_for('reset') }}";
-const indexUrl = "{{ url_for('index') }}";
-const file_path = "{{ file_path }}";

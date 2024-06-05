@@ -44,6 +44,13 @@
         </div>
     </div>
 
+    <script>
+        // Flask에서 제공하는 URL을 JavaScript 변수로 설정
+        const uploadUrl = "{{ url_for('index') }}";
+        const resetUrl = "{{ url_for('reset') }}";
+        const indexUrl = "{{ url_for('index') }}";
+        const file_path = "{{ file_path }}";
+    </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
