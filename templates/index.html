@@ -1,25 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>EasyOCR Flask App</title>
+    <title>이미지 OCR 변환</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Upload an Image for OCR</h1>
-    <form method="POST" action="{{ url_for('index') }}" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*">
-        <button type="submit">Upload</button>
-    </form>
+    <div class="container">
+        <div class="left-panel">
+            <!-- 업로드 폼 -->
+            <h1>OCR을 위한 이미지 업로드</h1>
+            <form id="upload-form" method="POST" action="{{ url_for('index') }}" enctype="multipart/form-data" class="upload-form">
+                <input type="file" name="file" accept="image/*" class="file-input">
+                <div class="buttons">
+                    <button type="submit" class="button">업로드</button>
+                    <button type="reset" class="button" onclick="window.location.href='/'">초기화</button>
+                </div>
+            </form>
+            <p>클립보드에서 이미지를 붙여넣으세요 (Ctrl+V)</p>
+            <!-- 업로드된 이미지 표시 -->
+            {% if file_path %}
+                <div class="image-container">
+                    <h2>업로드된 이미지</h2>
+                    <img src="{{ url_for('uploaded_file', filename=file_path.split('/')[-1]) }}" alt="Uploaded Image" class="uploaded-image">
+                </div>
+            {% endif %}
+        </div>
+        <!-- OCR 결과 표시 -->
+        <div class="right-panel">
+            {% if itemOptionList %}
+                <div class="text-container">
+                    <h2>OCR 결과</h2>
+                    <ul class="ocr-results">
+                        {% for item in itemOptionList %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
-    {% if itemOptionList %}
-        <h2>OCR Results</h2>
-        <img src="{{ file_path }}" alt="Uploaded Image">
-        <ul>
-            {% for item in itemOptionList %}
-                <li>{{ item }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <script>
+        document.addEventListener('paste', function(event) {
+            let items = (event.clipboardData || event.originalEvent.clipboardData).items;
+            for (let index in items) {
+                let item = items[index];
+                if (item.kind === 'file') {
+                    let blob = item.getAsFile();
+                    let formData = new FormData();
+                    formData.append('file', blob, 'clipboard_image.png');
+
+                    fetch('{{ url_for('index') }}', {
+                        method: 'POST',
+                        body: formData
+                    }).then(response => response.text())
+                      .then(data => {
+                          document.open();
+                          document.write(data);
+                          document.close();
+                      })
+                      .catch(error => console.error('Error:', error));
+                }
+            }
+        });
+    </script>
 </body>
 </html>
