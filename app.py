@@ -3,7 +3,7 @@ import easyocr
 import os
 
 app = Flask(__name__)
-
+# pip install "numpy<2.0" -- 당분간 numpy 2.0 미만 버전으로 사용해야함!
 # 업로드된 파일을 저장할 폴더 경로 설정
 UPLOAD_FOLDER = 'static/uploads/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
