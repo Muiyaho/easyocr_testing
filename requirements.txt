@@ -4,4 +4,4 @@ Pillow
 Werkzeug
 torch
 torchvision
-numpy
+numpy<2

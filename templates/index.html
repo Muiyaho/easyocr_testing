@@ -36,9 +36,16 @@
                     <h2>OCR 결과</h2>
                     <ul class="ocr-results">
                         {% for item in itemOptionList %}
-                            <li>{{ item }}</li>
+                            <li>
+                                <input type="text" value="{{ item }}" class="ocr-result-input" disabled>
+                                <button type="button" class="edit-button" onclick="enableEdit(this)">
+                                    <img src="{{ url_for('static', filename='edit-icon.png') }}" alt="Edit">
+                                </button>
+                            </li>
                         {% endfor %}
                     </ul>
+                    <button type="button" class="button" onclick="submitCorrections()">수정 제출</button>
+                    <button type="button" class="button" onclick="trainModel()">모델 재학습</button>
                 </div>
             {% endif %}
         </div>
@@ -49,7 +56,45 @@
         const uploadUrl = "{{ url_for('index') }}";
         const resetUrl = "{{ url_for('reset') }}";
         const indexUrl = "{{ url_for('index') }}";
+        const correctUrl = "{{ url_for('correct') }}";
+        const trainUrl = "{{ url_for('train') }}";
         const file_path = "{{ file_path }}";
+
+        function enableEdit(button) {
+            const input = button.previousElementSibling;
+            input.disabled = false;
+            input.focus();
+        }
+
+        function submitCorrections() {
+            const correctedText = [];
+            document.querySelectorAll('.ocr-result-input').forEach(input => {
+                correctedText.push(input.value);
+            });
+            fetch(correctUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ correctedText, file_path })
+            }).then(response => response.text())
+              .then(data => {
+                  document.open();
+                  document.write(data);
+                  document.close();
+              })
+              .catch(error => console.error('Error:', error));
+        }
+
+        function trainModel() {
+            fetch(trainUrl, {
+                method: 'POST'
+            }).then(response => response.json())
+              .then(data => {
+                  alert(data.status);
+              })
+              .catch(error => console.error('Error:', error));
+        }
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

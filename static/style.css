@@ -104,6 +104,21 @@ form.upload-form {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+/* 수정 버튼 스타일 */
+.edit-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.edit-button img {
+    width: 20px;
+    height: 20px;
 }
 
 /* 클립보드 안내 스타일 */
